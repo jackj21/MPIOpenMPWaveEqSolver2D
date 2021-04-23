@@ -8,8 +8,8 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <time.h>
-
-#include <omp.h>
+#include <mpi.h>
+//#include <omp.h>
 
 #include "array_2d.h"
 #include "wave.h"
@@ -34,11 +34,12 @@ int main(int argc, char** argv){
     int nt = atoi(argv[5]);
 
     // Perform the task.
-    start = omp_get_wtime();
-
+//    start = omp_get_wtime();
+    start = MPI_Wtime();
     standing_wave_simulation(nt, n, Mx, My, alpha);
 
-    stop = omp_get_wtime();
+//    stop = omp_get_wtime();
+    stop = MPI_Wtime();
     simulation_time = (double)(stop - start);
 
     printf("%d %d %f\n", n, nt, simulation_time);
