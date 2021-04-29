@@ -64,17 +64,19 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
     float* u2_data = u2->data;
     int k;
     float e;
-
-#pragma omp parallel for default(none) \
+//#pragma omp parallel for default(none) \
                          shared(n_data, u1_data, u2_data) \
                          private(e, k) \
                          reduction(+:err_local)
+    *err = 0;
     for(k=0; k<n_data; ++k) {
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
     }
-
-    *err = sqrt(err_local) / n_data;
+    float final = 0;
+    MPI_Reduce(&err_local,&final,1,MPI_FLOAT,MPI_SUM,0,MPI_COMM_WORLD);
+    //mpi all reduce
+    *err = sqrt(final) / n_data;
 
     return 0;
 }

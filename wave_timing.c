@@ -20,7 +20,7 @@ int main(int argc, char** argv){
         printf("Incorrect number of parameters.  Correct usage:\n./wave_timing n Mx My alpha T\n");
         return 1;
     }
-
+    MPI_Init(&argc, &argv);
     // Setup the timers.
     double start, stop;
     double simulation_time = 0.0;
@@ -43,6 +43,6 @@ int main(int argc, char** argv){
     simulation_time = (double)(stop - start);
 
     printf("%d %d %f\n", n, nt, simulation_time);
-    
+    MPI_Finalize();
     return 0;
 }
