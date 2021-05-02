@@ -58,18 +58,18 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
 
     float err_local = 0.0;
 
-    unsigned int n_data = u1->nx * u1->ny;
+    unsigned int n_data = u1->N_global;
 
     float* u1_data = u1->data;
     float* u2_data = u2->data;
     int k;
     float e;
 //#pragma omp parallel for default(none) \
-                         shared(n_data, u1_data, u2_data) \
-                         private(e, k) \
-                         reduction(+:err_local)
+                         //shared(n_data, u1_data, u2_data) \
+                         //private(e, k) \
+                         //reduction(+:err_local)
     *err = 0;
-    for(k=0; k<n_data; ++k) {
+    for(k=0; k<u1_data->N_local; ++k) {
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
     }
