@@ -47,6 +47,7 @@ int nullify_Array2D_f(Array2D_f* arr);
 int initialize_Array2D_f(Array2D_f* arr);
 int copy_Array2D_f(Array2D_f* src, Array2D_f* dest);
 int write_Array2D_f(Array2D_f* u, char* filename);
+int halo_exchange_Array2D(Array2D_f* arr);
 
 
 #endif

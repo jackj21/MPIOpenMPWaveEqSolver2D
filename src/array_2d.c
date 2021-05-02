@@ -234,3 +234,77 @@ int write_Array2D_f(Array2D_f* u, char* filename){
 
     return 0;
 }
+
+
+/*
+ * Perform a halo exchange on a domain decomposed grid using non-blocking
+ * operations
+ *
+ * Arguments:
+ * 	arr: 1D Array to perform the exchange on
+ *
+ * Returns:
+ * 	error code, 0 for success, 1 for failure
+ */
+int halo_exchange_Array2D(Array2D_f* arr){
+	int p = arr->padding;
+	int h = arr->N_padded;
+
+	int rank, size;
+	MPI_COMM_size(arr->comm, &size);
+	MPI_COMM_rank(arr->comm, &rank);
+
+	MPI_Status statuses[4];
+	MPI_Request requests[4];
+
+	//Initialize the requests
+	for(int i=0; i<4; i++){
+		requestss[i] = MPI_REQUEST_NULL;
+	}
+
+	//pointer to location to fill using data from prev rank
+	float* recv_from_up = arr->data;
+
+	//pointer to location to send data from to 
+	float* send_to_up = arr->data + p;
+
+	//pointer to loc to send data from next rank
+	float* send_to_down = arr->data + h - 2*p;
+
+	//pointer to loc to fill using data from next rank
+	float* recv_from_down = send_to_down + p;
+
+	//Protect the sequential case
+	if(size==1){
+		return 0;
+	}
+
+	//SENDS AND RECEIVES
+	
+	//receive from previous (up) rank
+	if(rank > 0) {
+		MI_Irecv(recv_from_up, p,  MPI_FLOAT, rank-1, 0, arr->comm, &requests[0]);
+	}
+
+	//receive from next (down) rank
+	if (rank < size-1) {
+		MPI_Irecv(recv_from_down, p, MPI_FLOAT, rank+1, 0, arr->comm, &requests[1]);
+	}
+
+	//send to previous (up) rank
+	if (rank>0){
+		MPI_Isend(send_to_up, p, MPI_FLOAT, rank-1, 0, arr->comm, &requests[2]);
+	}
+
+	//send to next (down) rank
+	if (rank < size-1) {
+		MPI_Isend(send_to_down, p, MPI_FLOAT, rank+1, 0, arr->comm, &requestss[3]);
+	}
+
+	//make sure all requests finish
+	MPI_Waitall(4, requests, statuses);
+
+	return 0;
+
+
+}
