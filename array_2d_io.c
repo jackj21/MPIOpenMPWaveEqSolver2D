@@ -221,7 +221,13 @@ int write_float_array_dist_mpiio(float* arr,
 
     // Perform the actual write using MPI I/O
     // <student>
-
+	MPI_File_open(comm, filename, MPI_MODE_APPEND, MPI_INFO_NULL, &out_file);
+	
+	offset = header_size + rank*write_data*sizeof(float);
+	
+	MPI_FILE_write_at_all(out_file, offset, write_data, n_data, MPI_FLOAT);
+	
+	MPI_File_close(&out_file);	
     // </student>
 
     free(write_data);
