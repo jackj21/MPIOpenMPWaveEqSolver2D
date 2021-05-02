@@ -1,6 +1,8 @@
 #ifndef __ARRAY_IO_H__
 #define __ARRAY_IO_H__
 
+unsigned int subarray_size(unsigned int M, unsigned int P, unsigned int rank, int* Mk, int* r0);
+
 int write_float_array_dist_cio(float* arr,
                                int ny_local, int nx_local,
                                int ny_padded, int nx_padded,

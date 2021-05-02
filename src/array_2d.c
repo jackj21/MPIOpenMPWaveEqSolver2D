@@ -12,7 +12,7 @@
 #include <limits.h>
 #include <mpi.h>
 #include "array_2d.h"
-
+#include "array_2d_io.h"
 
 
 /*
@@ -33,20 +33,20 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	MPI_Comm_size(comm, &size);
 	MPI_Comm_rank(comm, &rank);
 
-	int N_local, r0;
-	//compute subvector size to find N_local and r0
-	//look at "flag" in lab 8
+	//Assign x, y, and global 1D dimensions
+	arr->ny = m;
+	arr->nx = n;
+	arr->N_global = arr->ny * arr->nx;
 	
-	//Assign padding and size of local vector
+	//Compute subarray size for local arrays
+	int N_local, r0;
+	int flag = 0;
+	flag = subarray_size(arr->N_global, size, rank, &N_local, *r0);
+
+	//Assign padding and size of local vector after calc
 	arr->padding = padding;
 	arr->N_local = N_local;
 	arr->N_padded = N_local + 2*padding;
-
-	//Assign x and y dimensions
-    arr->ny = m;
-    arr->nx = n;
-	//Assign size of global vector
-    arr->N_global = arr->ny * arr->nx;
 
 	//Assign the communicator (might need to change if using I/O)
 	arr->comm = comm;
@@ -60,7 +60,7 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
     }
 
 	//will return "flag" once compute_subarray_function completed
-    return 0;
+    return flag;
 }
 
 
