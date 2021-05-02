@@ -10,7 +10,7 @@ unsigned int subarray_size(unsigned int M, unsigned int P, unsigned int rank, in
 	//Might have to change depending on what the formula actually is in Prep 2
 
 	//Determine local array size
-	*Mk = M / P;
+	*Mk = (M + rank)/ P;
 	//Determine start idx of local array
 	*r0 = (*Mk)*rank;
 	
