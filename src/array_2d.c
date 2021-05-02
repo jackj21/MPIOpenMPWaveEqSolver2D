@@ -10,7 +10,7 @@
 #include <string.h>
 #include <stdio.h>
 #include <limits.h>
-
+#include <mpi.h>
 #include "array_2d.h"
 
 
@@ -27,20 +27,39 @@
 *   error code, 0 for success, 1 for failure
 */
 
-int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n) {
+int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int padding, MPI_Comm comm) {
 
+	int rank, size;
+	MPI_Comm_size(comm, &size);
+	MPI_Comm_rank(comm, &rank);
+
+	int N_local, r0;
+	//compute subvector size to find N_local and r0
+	//look at "flag" in lab 8
+	
+	//Assign padding and size of local vector
+	arr->padding = padding;
+	arr->N_local = N_local;
+	arr->N_padded = N_local + 2*padding;
+
+	//Assign x and y dimensions
     arr->ny = m;
     arr->nx = n;
+	//Assign size of global vector
+    arr->N_global = arr->ny * arr->nx;
 
-    unsigned int n_data = m*n;
-
-    arr->data = malloc(n_data*sizeof(float));
+	//Assign the communicator (might need to change if using I/O)
+	arr->comm = comm;
+	
+	//May not need the (float*)
+	arr->data = (float*)malloc((arr->N_padded)*sizeof(float));
 
     if (arr->data == NULL){
         fprintf(stderr, "Error allocating 2D int array.\n");
         return 1;
     }
 
+	//will return "flag" once compute_subarray_function completed
     return 0;
 }
 
@@ -59,6 +78,15 @@ int deallocate_Array2D_f(Array2D_f* arr){
 
     arr->ny = 0;
     arr->nx = 0;
+	arr->N_global = 0;
+
+	arr->padding = 0;
+	arr->N_local = 0;
+	arr->N_padding = 0;
+
+	arr->r0 = -1;
+
+	arr->comm = MPI_COMM_NULL;
 
     free(arr->data);
 
@@ -80,9 +108,7 @@ int deallocate_Array2D_f(Array2D_f* arr){
 
 int initialize_Array2D_f(Array2D_f* arr){
 
-    unsigned int n_data = arr->ny * arr->nx;
-
-    memset(arr->data, 0, n_data*sizeof(float));
+    memset(arr->data, 0, arr->N_padded*sizeof(float));
 
     return 0;
 }
@@ -104,6 +130,14 @@ int nullify_Array2D_f(Array2D_f* arr){
 
     arr->ny = 0;
     arr->nx = 0;
+	arr->N_global = 0;
+
+	arr->N_padded = 0;
+	arr->N_local = 0;
+	arr->r0 = -1;
+	arr->padding = 0;
+	arr->comm = MPI_COMM_NULL;
+
     arr->data = NULL;
 
     return 0;
