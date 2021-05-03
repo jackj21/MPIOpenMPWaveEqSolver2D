@@ -10,6 +10,7 @@
 #include <time.h>
 #include <mpi.h>
 #include <math.h>
+#include <string.h>
 
 #include "array_2d.h"
 #include "wave.h"
@@ -60,8 +61,10 @@ int main(int argc, char** argv){
 	evaluate_standing_wave(&u_prev, Mx, My, dx, dy, -1.0*dt);
 	evaluate_standing_wave(&u_curr, Mx, My, dx, dy, 0.0);
 
-	char outfile[50] = "wave_print_test.bin";	
-	
+	char outfile[50];
+	memset(outfile, 50*sizeof(char), 0);	
+	sprintf(outfile, "print/wave_print_%05d.bin", 0);
+
 	int ny_local = u_curr.ny_local;
 	int nx_local = u_curr.nx_local;
 	int ny_padded = u_curr.ny_padded;
@@ -77,7 +80,13 @@ int main(int argc, char** argv){
 	
 	write_float_array_dist_cio(arr, ny_local, nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
 	
-
+	for (int k=1; k<nt; k++) {
+		standing_wave_simulation_nsteps(&u_prev, &u_curr, &u_next, dt, dx, 1);
+		memset(outfile, 50*sizeof(char), 0);
+		sprintf(outfile, "print/wave_print_%05d.bin", k);
+		write_float_array_dist_cio(arr, ny_local ,nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
+	}
+		
 	// Clean up memory and close MPI
 	deallocate_Array2D_f(&u_prev);
 	deallocate_Array2D_f(&u_curr);

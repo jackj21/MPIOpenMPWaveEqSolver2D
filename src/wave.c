@@ -177,32 +177,33 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
     float* u_curr_data = u_curr->data;
     float* u_next_data = u_next->data;
 
-	int padding = u_curr->padding;	// Size of ghost padding
-	int ny_padded = u_curr->ny_padded;	// Size of padded local part of vector
-	int nx_padded = u_curr->nx_padded;
+	int padding = u_curr->padding;		// Size of ghost padding
+	int ny_padded = u_curr->ny_padded;	// Size of padded local part of vector in y dimension
+	int nx_padded = u_curr->nx_padded;	// Size of padded local part of vector in x dimension
 	int r0 = u_curr->r0;				// Starting idx of unpadded local vector in global coordinates
-	int ny_local = u_curr->ny_local;
-	int nx_local = u_curr->nx_local;
-	int num_padded = nx_local * padding;
+	int ny_local = u_curr->ny_local;	// Size of array in y dimension
+	int nx_local = u_curr->nx_local;	// Size of array in x dimension
+	int num_padded = nx_local * padding;// Size of 1 padding region	
 
     // Loop over both spatial dimensions
-    for(int j=r0; j<ny; ++j) {
-        for(int i=0; i<nx; ++i) {
-
+    for(int j=0; j<ny_local; ++j) {
+        for(int i=0; i<nx_local; ++i) {
             // Map the two dimensions back to the linear index
             int kr = ji_to_idx(j, i, nx) + num_padded;
 
             // If the point is on the boundary, zero it and move on to the next point
-            if ((j == 0) || (j == ny-1) || (i == 0) || (i == nx-1)) {
+			// ***************************************************************************
+			// NY_LOCAL AND NX_LOCAL MAY BE WRONG VALUES **********************************
+            if ((j == 0) || (j == ny_local-1) || (i == 0) || (i == nx_local-1)) {
                 u_next_data[kr] = 0.0;
                 continue;
             }
 
             // Precompute the indices of the surrounding points
-            int kr_up    = ji_to_idx(j-1, i, nx);
-            int kr_down  = ji_to_idx(j+1, i, nx);
-            int kr_left  = ji_to_idx(j, i-1, nx);
-            int kr_right = ji_to_idx(j, i+1, nx);
+            int kr_up    = ji_to_idx(j-1, i, nx) + num_padded;
+            int kr_down  = ji_to_idx(j+1, i, nx) + num_padded;
+            int kr_left  = ji_to_idx(j, i-1, nx) + num_padded;
+            int kr_right = ji_to_idx(j, i+1, nx) + num_padded;
 
             // Compute the Laplacian
             float lap = -4*u_curr_data[kr] + u_curr_data[kr_up] + u_curr_data[kr_down] + u_curr_data[kr_left] + u_curr_data[kr_right];
