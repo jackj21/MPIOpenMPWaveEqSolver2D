@@ -36,17 +36,21 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	//Assign x, y, and global 1D dimensions
 	arr->ny = m;
 	arr->nx = n;
-	arr->N_global = arr->ny * arr->nx;
+
+	unsigned int global = m*n;
+	arr->N_global = global;
 	
 	//Compute subarray size for local arrays
 	int N_local, r0;
 	int flag = 0;
-	flag = subarray_size(arr->N_global, size, rank, &N_local, *r0);
+	flag = subarray_size(global, size, rank, &N_local, &r0);
 
 	//Assign padding and size of local vector after calc
 	arr->padding = padding;
 	arr->N_local = N_local;
 	arr->N_padded = N_local + 2*padding;
+
+	arr->r0 = r0;
 
 	//Assign the communicator (might need to change if using I/O)
 	arr->comm = comm;
@@ -82,7 +86,7 @@ int deallocate_Array2D_f(Array2D_f* arr){
 
 	arr->padding = 0;
 	arr->N_local = 0;
-	arr->N_padding = 0;
+	arr->N_padded = 0;
 
 	arr->r0 = -1;
 
@@ -251,15 +255,15 @@ int halo_exchange_Array2D(Array2D_f* arr){
 	int h = arr->N_padded;
 
 	int rank, size;
-	MPI_COMM_size(arr->comm, &size);
-	MPI_COMM_rank(arr->comm, &rank);
+	MPI_Comm_size(arr->comm, &size);
+	MPI_Comm_rank(arr->comm, &rank);
 
 	MPI_Status statuses[4];
 	MPI_Request requests[4];
 
 	//Initialize the requests
 	for(int i=0; i<4; i++){
-		requestss[i] = MPI_REQUEST_NULL;
+		requests[i] = MPI_REQUEST_NULL;
 	}
 
 	//pointer to location to fill using data from prev rank
@@ -283,7 +287,7 @@ int halo_exchange_Array2D(Array2D_f* arr){
 	
 	//receive from previous (up) rank
 	if(rank > 0) {
-		MI_Irecv(recv_from_up, p,  MPI_FLOAT, rank-1, 0, arr->comm, &requests[0]);
+		MPI_Irecv(recv_from_up, p,  MPI_FLOAT, rank-1, 0, arr->comm, &requests[0]);
 	}
 
 	//receive from next (down) rank
@@ -298,7 +302,7 @@ int halo_exchange_Array2D(Array2D_f* arr){
 
 	//send to next (down) rank
 	if (rank < size-1) {
-		MPI_Isend(send_to_down, p, MPI_FLOAT, rank+1, 0, arr->comm, &requestss[3]);
+		MPI_Isend(send_to_down, p, MPI_FLOAT, rank+1, 0, arr->comm, &requests[3]);
 	}
 
 	//make sure all requests finish

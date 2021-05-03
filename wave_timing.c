@@ -13,6 +13,7 @@
 
 #include "array_2d.h"
 #include "wave.h"
+#include "array_2d_io.h"
 
 int main(int argc, char** argv){
 

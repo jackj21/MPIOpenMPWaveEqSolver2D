@@ -69,7 +69,7 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
                          //private(e, k) \
                          //reduction(+:err_local)
     *err = 0;
-    for(k=0; k<u1_data->N_local; ++k) {
+    for(k=0; k<(u1->N_local); ++k) {
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
     }
@@ -112,8 +112,9 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
     float w = M_PI*sqrt((float)(Mx*Mx + My*My));
     float* u_data = u->data;
 
-#pragma omp parallel for default(none) \
-                         shared(u_data, ny, nx, w, Mx, My, dx, dy, t)
+//#pragma omp parallel for default(none) \
+//                         shared(u_data, ny, nx, w, Mx, My, dx, dy, t)
+	
     for(int j=0; j<ny; ++j) {
 
         float y = j*dy;
@@ -171,8 +172,8 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
     float* u_next_data = u_next->data;
 
     // Loop over both spatial dimensions
-#pragma omp parallel for default(none) \
-                         shared(u_prev_data, u_curr_data, u_next_data, ny, nx, dx, dt)
+//#pragma omp parallel for default(none) \
+//                         shared(u_prev_data, u_curr_data, u_next_data, ny, nx, dx, dt)
     for(int j=0; j<ny; ++j) {
         for(int i=0; i<nx; ++i) {
 
@@ -221,7 +222,7 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 *      * 3: Error allocating u_next.
 */
 
-int standing_wave_simulation(int nt, unsigned int N, unsigned int Mx, unsigned int My, float alpha) {
+int standing_wave_simulation(int nt, unsigned int N, unsigned int Mx, unsigned int My, int padding, float alpha) {
 
     // Specification allows us to assume that nx == ny
     unsigned int nx = N;
@@ -243,6 +244,7 @@ int standing_wave_simulation(int nt, unsigned int N, unsigned int Mx, unsigned i
     Array2D_f u_curr;
     Array2D_f u_next;
 
+
     // This was not required by the spec but it is an additional safety against using an
     // unallocated array.
     nullify_Array2D_f(&u_prev);
@@ -250,11 +252,11 @@ int standing_wave_simulation(int nt, unsigned int N, unsigned int Mx, unsigned i
     nullify_Array2D_f(&u_next);
 
     // Allocate the required arrays.
-    error = allocate_Array2D_f(&u_prev, ny, nx);
+    error = allocate_Array2D_f(&u_prev, ny, nx, padding, MPI_COMM_WORLD);
     if (error) return 1;
-    error = allocate_Array2D_f(&u_curr, ny, nx);
+    error = allocate_Array2D_f(&u_curr, ny, nx, padding, MPI_COMM_WORLD);
     if (error) return 2;
-    error = allocate_Array2D_f(&u_next, ny, nx);
+    error = allocate_Array2D_f(&u_next, ny, nx, padding, MPI_COMM_WORLD);
     if (error) return 3;
 
     // Initialize the required arrays.

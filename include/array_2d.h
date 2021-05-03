@@ -41,7 +41,7 @@ typedef struct Array2D_f_tag {
 
 } Array2D_f;
 
-int allocate_Array2D_f(Array2D_f* arr, unsigned int ny, unsigned int nx, int padding, MPI_COMM comm);
+int allocate_Array2D_f(Array2D_f* arr, unsigned int ny, unsigned int nx, int padding, MPI_Comm comm);
 int deallocate_Array2D_f(Array2D_f* arr);
 int nullify_Array2D_f(Array2D_f* arr);
 int initialize_Array2D_f(Array2D_f* arr);

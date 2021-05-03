@@ -26,7 +26,7 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
 
 int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float dt, float dx);
 
-int standing_wave_simulation(int nt, unsigned int N, unsigned int Mx, unsigned int My, float alpha);
+int standing_wave_simulation(int nt, unsigned int N, unsigned int Mx, unsigned int My, int padding, float alpha);
 
 int standing_wave_simulation_nsteps(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float dt, float dx, int nt);
 

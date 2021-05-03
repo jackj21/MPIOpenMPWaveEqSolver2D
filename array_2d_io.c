@@ -4,23 +4,18 @@
 
 #include <mpi.h>
 
-unsigned int subarray_size(unsigned int M, unsigned int P, unsigned int rank, int* Mk, int* r0){
+unsigned int subarray_size(unsigned int M, unsigned int P, int rank){
 
 //    <student>
-	//Might have to change depending on what the formula actually is in Prep 2
+	unsigned int size;
 
-	//Determine local array size
-	*Mk = (M + rank)/ P;
-	//Determine start idx of local array
-	*r0 = (*Mk)*rank;
-	
-	//accounts for the last rank's data size
-	if (rank == P-1){
-		*Mk += M%P;
+	if (rank < M%P) {
+		size = M/P + 1;	
 	}
-
-	return 0;
-
+	
+	size = M/P;
+	
+	return size;
 //    </student>
 
 }
