@@ -23,11 +23,11 @@ typedef struct Array2D_f_tag {
 	int padding;
 
 	//Size of (unpadded) local part of vector
-	int N_local;
-
+	int ny_local;
+	int nx_local;
 	//Size of padded local part of vector
-	int N_padded;
-
+	int ny_padded;
+	int nx_padded;
 	//Size of the global vector
 	unsigned int N_global;
 

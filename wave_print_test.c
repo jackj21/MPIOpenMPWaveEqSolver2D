@@ -48,44 +48,35 @@ int main(int argc, char** argv){
 	Array2D_f u_curr;
 	Array2D_f u_next;
 		
-	allocate_Array2D_f(&u_prev, ny, nx, 0, MPI_COMM_WORLD);
-	allocate_Array2D_f(&u_curr, ny, nx, 0, MPI_COMM_WORLD);
-	allocate_Array2D_f(&u_next, ny, nx, 0, MPI_COMM_WORLD);
+	allocate_Array2D_f(&u_prev, ny, nx, 1, MPI_COMM_WORLD);
+	allocate_Array2D_f(&u_curr, ny, nx, 1, MPI_COMM_WORLD);
+	allocate_Array2D_f(&u_next, ny, nx, 1, MPI_COMM_WORLD);
 
 	initialize_Array2D_f(&u_prev);
 	initialize_Array2D_f(&u_curr);
 	initialize_Array2D_f(&u_next);
-		
+	
 	// Evaluate initial conditions at t=-dt and t=0
 	evaluate_standing_wave(&u_prev, Mx, My, dx, dy, -1.0*dt);
-	evaluate_standing_wave(&u_curr, Mx, My, dx, dy, 0.0);
+	//evaluate_standing_wave(&u_curr, Mx, My, dx, dy, 0.0);
 
-	char outfile[50];	
+	//char outfile[50] = "wave_print_test.bin";	
 	
-	int ny_local = u_curr.N_local;
-	int nx_local = u_curr.N_local;
-	int ny_padded = u_curr.N_padded;
-	int nx_padded = u_curr.N_padded;
-	int ny_global = u_curr.N_global;
-	int nx_global = u_curr.N_global;
+	int ny_local = u_curr.ny_local;
+	int nx_local = u_curr.nx_local;
+	int ny_padded = u_curr.ny_padded;
+	int nx_padded = u_curr.nx_padded;
+	int ny_global = u_curr.ny;
+	int nx_global = u_curr.nx;
 	int padding_ny = u_curr.padding;
 	int padding_nx = u_curr.padding;
-	float* arr = u_curr.data;
+	//float* arr = u_curr.data;
 	MPI_Comm comm = u_curr.comm;
 
 
-	memset(outfile, 50*sizeof(char), 0);
-	sprintf(outfile, "wave_print_test_%05d.arr", 0);
 	
-	write_float_array_dist_cio(arr, ny_local, nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
+//	write_float_array_dist_cio(arr, ny_local, nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
 	
-	for (int k=1; k<nt; k++) {
-		standing_wave_simulation_nsteps(&u_prev, &u_curr, &u_next, dt, dx, 1);
-
-		memset(outfile, 50*sizeof(char), 0);
-		sprintf(outfile, "wave_print_test_%05d.arr", k);
-		write_float_array_dist_cio(arr, ny_local, nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
-	}
 
 	// Clean up memory and close MPI
 	deallocate_Array2D_f(&u_prev);

@@ -7,6 +7,8 @@ C_FLAGS :=
 
 INCLUDES := -lm
 
+obj: array_2d.o wave.o 
+
 all: wave_timing wave_images wave_animation wave_error
 
 array_2d.o:
@@ -36,3 +38,4 @@ clean:
 	rm -f wave_images
 	rm -f wave_animation
 	rm -f wave_error
+	rm -f wave_print_test

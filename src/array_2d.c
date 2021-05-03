@@ -22,6 +22,8 @@
 *   arr: The ny x nx array struct to allocate into
 *   m: number of rows in the array
 *   n: number of columns in the array
+*   padding: Size of the padding for the array's data   *******MAYBE REMOVE...*********
+*   comm: MPI Communicator to be set for the Array2D_f data structure
 *
 * Returns:
 *   error code, 0 for success, 1 for failure
@@ -33,38 +35,38 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	MPI_Comm_size(comm, &size);
 	MPI_Comm_rank(comm, &rank);
 
-	//Assign x, y, and global 1D dimensions
+	// Assign x, y, and global 1D dimensions
 	arr->ny = m;
 	arr->nx = n;
 
 	unsigned int global = m*n;
 	arr->N_global = global;
 	
-	//Compute subarray size for local arrays
+	// Compute subarray size for local arrays
 	int N_local, r0;
-	int flag = 0;
-	flag = subarray_size(global, size, rank, &N_local, &r0);
+	N_local = subarray_size(global, size, rank);
 
-	//Assign padding and size of local vector after calc
+	// Assign padding and size of local vector after calc
+	
 	arr->padding = padding;
-	arr->N_local = N_local;
-	arr->N_padded = N_local + 2*padding;
+	arr->ny_local = N_local;
+	arr->nx_local = N_local;
+	arr->ny_padded = N_local + 2*padding;
+	arr->nx_padded = N_local + 0*padding;
 
-	arr->r0 = r0;
+	arr->r0 = global / size * rank;  // Set starting index in global coordinates for arr
 
-	//Assign the communicator (might need to change if using I/O)
+	// Assign the communicator (might need to change if using I/O)
 	arr->comm = comm;
 	
-	//May not need the (float*)
-	arr->data = (float*)malloc((arr->N_padded)*sizeof(float));
+	arr->data = (float*)malloc((arr->ny_padded)*(arr->nx_padded)*sizeof(float));
 
     if (arr->data == NULL){
         fprintf(stderr, "Error allocating 2D int array.\n");
         return 1;
     }
 
-	//will return "flag" once compute_subarray_function completed
-    return flag;
+    return 0;
 }
 
 
@@ -85,9 +87,10 @@ int deallocate_Array2D_f(Array2D_f* arr){
 	arr->N_global = 0;
 
 	arr->padding = 0;
-	arr->N_local = 0;
-	arr->N_padded = 0;
-
+	arr->ny_local = 0;
+	arr->nx_local = 0;
+	arr->ny_padded = 0;
+	arr->nx_padded = 0;
 	arr->r0 = -1;
 
 	arr->comm = MPI_COMM_NULL;
@@ -112,7 +115,7 @@ int deallocate_Array2D_f(Array2D_f* arr){
 
 int initialize_Array2D_f(Array2D_f* arr){
 
-    memset(arr->data, 0, arr->N_padded*sizeof(float));
+    memset(arr->data, 0, arr->ny_padded*arr->nx_padded*sizeof(float));
 
     return 0;
 }
@@ -136,8 +139,10 @@ int nullify_Array2D_f(Array2D_f* arr){
     arr->nx = 0;
 	arr->N_global = 0;
 
-	arr->N_padded = 0;
-	arr->N_local = 0;
+	arr->ny_padded = 0;
+	arr->nx_padded = 0;
+	arr->ny_local = 0;
+	arr->nx_local = 0;
 	arr->r0 = -1;
 	arr->padding = 0;
 	arr->comm = MPI_COMM_NULL;
@@ -252,7 +257,7 @@ int write_Array2D_f(Array2D_f* u, char* filename){
  */
 int halo_exchange_Array2D(Array2D_f* arr){
 	int p = arr->padding;
-	int h = arr->N_padded;
+	int h = arr->ny_padded;
 
 	int rank, size;
 	MPI_Comm_size(arr->comm, &size);

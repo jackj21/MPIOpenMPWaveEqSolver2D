@@ -69,7 +69,7 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
                          //private(e, k) \
                          //reduction(+:err_local)
     *err = 0;
-    for(k=0; k<(u1->N_local); ++k) {
+    for(k=0; k<(u1->ny_local); ++k) { 	// CHANGED N_LOCAL TO NY_LOCAL **CHECK IF CORRECT
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
     }
@@ -111,20 +111,26 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
 
     float w = M_PI*sqrt((float)(Mx*Mx + My*My));
     float* u_data = u->data;
-
-//#pragma omp parallel for default(none) \
-//                         shared(u_data, ny, nx, w, Mx, My, dx, dy, t)
 	
-    for(int j=0; j<ny; ++j) {
+	int padding = u->padding;	// Size of ghost padding
+	int ny_padded = u->ny_padded;	// Total size of padded local part of vector in y-dimension
+	int nx_padded = u->nx_padded;
+	int r0 = u->r0;				// Starting idx of unpadded local vector in global coordinates
+	int ny_local = u->ny_local;
+	int nx_local = u->nx_local;
+	int num_padded = nx_local + padding;
 
-        float y = j*dy;
+    for(int j=0; j<ny_local; ++j) {
+		
+        float y = (r0+j)*dy;
 
-        for(int i=0; i<nx; ++i) {
-
-            int kr = ji_to_idx(j, i, nx);
+        for(int i=0; i<nx_local; ++i) {
+			j += padding;
+            int kr = ji_to_idx(j, i, nx) + num_padded;
             float x = i*dx;
-
+			//halo_exchange_Array2D(u);
             u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
+			
         }        
     }
 
@@ -171,14 +177,20 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
     float* u_curr_data = u_curr->data;
     float* u_next_data = u_next->data;
 
+	int padding = u_curr->padding;	// Size of ghost padding
+	int ny_padded = u_curr->ny_padded;	// Size of padded local part of vector
+	int nx_padded = u_curr->nx_padded;
+	int r0 = u_curr->r0;				// Starting idx of unpadded local vector in global coordinates
+	int ny_local = u_curr->ny_local;
+	int nx_local = u_curr->nx_local;
+	int num_padded = nx_local * padding;
+
     // Loop over both spatial dimensions
-//#pragma omp parallel for default(none) \
-//                         shared(u_prev_data, u_curr_data, u_next_data, ny, nx, dx, dt)
-    for(int j=0; j<ny; ++j) {
+    for(int j=r0; j<ny; ++j) {
         for(int i=0; i<nx; ++i) {
 
             // Map the two dimensions back to the linear index
-            int kr = ji_to_idx(j, i, nx);
+            int kr = ji_to_idx(j, i, nx) + num_padded;
 
             // If the point is on the boundary, zero it and move on to the next point
             if ((j == 0) || (j == ny-1) || (i == 0) || (i == nx-1)) {
@@ -197,6 +209,7 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
             lap /= (dx*dx);
 
             // Compute the time step update for this point
+			//halo_exchange_Array_2D(u_next);
             u_next_data[kr] = -1*u_prev_data[kr] + 2*u_curr_data[kr] + dt*dt*lap;
         }        
     }

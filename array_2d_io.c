@@ -4,6 +4,9 @@
 
 #include <mpi.h>
 
+/**
+ * 
+ */ 
 unsigned int subarray_size(unsigned int M, unsigned int P, int rank){
 
 //    <student>
@@ -20,6 +23,9 @@ unsigned int subarray_size(unsigned int M, unsigned int P, int rank){
 
 }
 
+/**
+ *
+ */ 
 int write_float_array_dist_cio(float* arr,
                                int ny_local, int nx_local,
                                int ny_padded, int nx_padded,
@@ -138,6 +144,9 @@ int write_float_array_dist_cio(float* arr,
 
 }
 
+/**
+ *
+ */ 
 int write_float_array_dist_mpiio(float* arr,
                                  int ny_local, int nx_local,
                                  int ny_padded, int nx_padded,
@@ -216,13 +225,13 @@ int write_float_array_dist_mpiio(float* arr,
 
     // Perform the actual write using MPI I/O
     // <student>
-	MPI_File_open(comm, filename, MPI_MODE_APPEND, MPI_INFO_NULL, &out_file);
+	//MPI_File_open(comm, filename, MPI_MODE_APPEND, MPI_INFO_NULL, &out_file);
 	
-	offset = header_size + rank*write_data*sizeof(float);
+	//offset = header_size + rank*write_data*sizeof(float);
 	
-	MPI_FILE_write_at_all(out_file, offset, write_data, n_data, MPI_FLOAT);
+	//MPI_FILE_write_at_all(out_file, offset, write_data, n_data, MPI_FLOAT);
 	
-	MPI_File_close(&out_file);	
+	//MPI_File_close(&out_file);	
     // </student>
 
     free(write_data);
