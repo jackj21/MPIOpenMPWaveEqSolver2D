@@ -1,0 +1,74 @@
+\documentclass{article}
+\usepackage[utf8]{inputenc}
+\usepackage{geometry}
+\geometry{margin=1in}
+\usepackage{enumitem}
+\usepackage{listings}
+\usepackage{graphicx}
+\usepackage{amsmath}
+
+\title{Projecrt 4 - Preparation}
+\author{Shaan Chudasama}
+\date{April 20, 2021}
+
+\begin{document}
+
+\maketitle
+\section*{Task 1 - Work Plan}
+
+In order to complete Project 4 on time, we are planning on dividing up the coding tasks and meeting back up on April 22nd, with the expectation that our work with be close to done or completed fully. From there, we will meet two to three times the following week in order to complete the coding portion of the assignment, and split up the work on the analysis portion. As of now, we are planning on choosing Option A of the Extra Tasks for 3 Person Groups. 
+
+\begin{itemize}
+    \item Mason:
+    Fix Makefile, remove Open Np/add it, SLURM Script, parallelize function for computing error norm, update timing code, Create readme for how to run code
+    
+    \item Shaan:
+    Tasks 3-4:  Modifying our structure to operate in a domain decomposed environment, and Halo Exchange for domain-decomposed grid. - will probably need some help from both Jack and Mason at specific points
+    
+    \item Jack:
+    Primary Tasks left include Task 5 and Task 7, which involve implementing MPI input/output and updating the functions to evaluate the standing wave and computing 1 iteration of the simulation to work with distributed grids while ensuring the halo regions are properly updated.
+\end{itemize}
+
+\maketitle
+\section*{Task 2}
+
+\begin{enumerate}[label=(\alph*)]
+    \item Load imbalance for: 
+    \newline $N = 1001$ and $P = 1000$ $->$ Relatively low load imbalance
+    \newline $N = 1999$ and $P = 1000$ $->$ Relatively high load imbalance
+    \item For $N = 1999$ and $P = 1000$, the optimal distribution of work is when all processors are doing the same amount of work. If this is not possible, we would want more processors computing a lower $N_r$ with less processors are computing a higher $N_r$. In order to do this, we must split up the number of processors evenly and distribute the work to each. 1 processor will have about $N_r = 1$ amount of work, while the rest of the processors will have $N_r = 2$ amount of work. In total, this adds up to $P = 1 + 999 = 1000$ and $N = (1 * 1) + (999 * 2) = 1 + 1998 = 1999$. All of the processors have the same amount of work distributed to them except for one, so this is the most optimal distribution of work. 
+    
+    \item Formula to distribute data better:
+    \begin{align}
+        N_r = \frac{N+r}{p}
+    \end{align}
+    
+\end{enumerate}
+
+\maketitle
+\section*{Task 3}
+
+$(100,001 * 100,001) * 4$ bytes $= 40,000,800,004$ bytes $-> ~ 40$ GB
+
+\maketitle
+\section*{Task 4}
+
+\begin{enumerate}[label=(\alph*)]
+
+\item $460s -> ~ 0.1278 hours * 512 = 65.4336 hours$
+
+\item $1.25seconds * 512 processors = 640 seconds-> ~ 0.1778 hours$
+
+\item $0.3 seconds * 1024 processors  = 307.2 seconds -> ~ 0.0853 hours$
+
+\item $26seconds * 1024 processors = 26624 seconds ~ 7.396 hours$
+
+\end{enumerate}
+
+\maketitle
+\section*{Task 5}
+
+The halo padding region should be $\frac{(Size of Array - 1}{2}$ on each side so that the total padding will be double that value. This padding should be applied to the Y dimension. In order to map the internal data to the grid coordinate system includes the number of processors (n\_procs), the rank of a specific processor (p), the dimension the 2D Array (K), the number of non-border grid points (M), and allocated arrays of $M_p + 2*q$ (x\textsubscript{p} and y\textsubscript{p}). Other useful information includes n, n\_t, alpha, mx, and my. 
+
+
+\end{document}
