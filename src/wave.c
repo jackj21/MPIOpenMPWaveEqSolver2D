@@ -123,14 +123,14 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
     for(int j=0; j<ny_local; ++j) {
 		
         float y = (r0+j)*dy;
-
+		j += padding;
         for(int i=0; i<nx_local; ++i) {
-			j += padding;
-            int kr = ji_to_idx(j, i, nx) + num_padded;
-            float x = i*dx;
-			halo_exchange_Array2D(u);
-            u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
 			
+            int kr = ji_to_idx(j, i, nx);
+            float x = i*dx;
+			
+            u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
+			halo_exchange_Array2D(u);
         }        
     }
 
@@ -187,31 +187,31 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 
     // Loop over both spatial dimensions
     for(int j=0; j<ny_local; ++j) {
-        for(int i=0; i<nx_local; ++i) {
+        j += padding;
+		for(int i=0; i<nx_local; ++i) {
+			
             // Map the two dimensions back to the linear index
-            int kr = ji_to_idx(j, i, nx) + num_padded;
+            int kr = ji_to_idx(j, i, nx);
 
             // If the point is on the boundary, zero it and move on to the next point
-			// ***************************************************************************
-			// NY_LOCAL AND NX_LOCAL MAY BE WRONG VALUES **********************************
-            if ((j == 0) || (j == ny_local-1) || (i == 0) || (i == nx_local-1)) {
+            if ((j == 0) || (j == ny_local) || (i == 0) || (i == nx_local)) {
                 u_next_data[kr] = 0.0;
                 continue;
             }
 
             // Precompute the indices of the surrounding points
-            int kr_up    = ji_to_idx(j-1, i, nx) + num_padded;
-            int kr_down  = ji_to_idx(j+1, i, nx) + num_padded;
-            int kr_left  = ji_to_idx(j, i-1, nx) + num_padded;
-            int kr_right = ji_to_idx(j, i+1, nx) + num_padded;
+            int kr_up    = ji_to_idx(j-1, i, nx);
+            int kr_down  = ji_to_idx(j+1, i, nx);
+            int kr_left  = ji_to_idx(j, i-1, nx);
+            int kr_right = ji_to_idx(j, i+1, nx);
 
             // Compute the Laplacian
             float lap = -4*u_curr_data[kr] + u_curr_data[kr_up] + u_curr_data[kr_down] + u_curr_data[kr_left] + u_curr_data[kr_right];
             lap /= (dx*dx);
 
             // Compute the time step update for this point
-			//halo_exchange_Array_2D(u_next);
             u_next_data[kr] = -1*u_prev_data[kr] + 2*u_curr_data[kr] + dt*dt*lap;
+			halo_exchange_Array2D(u_next);
         }        
     }
 

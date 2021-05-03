@@ -50,17 +50,17 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	
 	arr->padding = padding;
 	arr->ny_local = N_local;
-	arr->nx_local = N_local;
+	arr->nx_local = n;
 	arr->ny_padded = N_local + 2*padding;
-	arr->nx_padded = N_local + 0*padding;
+	arr->nx_padded = n + 0*padding;
 
 	arr->r0 = global / size * rank;  // Set starting index in global coordinates for arr
-
+		
 	// Assign the communicator (might need to change if using I/O)
 	arr->comm = comm;
 	
 	arr->data = (float*)malloc((arr->ny_padded)*(arr->nx_padded)*sizeof(float));
-
+	
     if (arr->data == NULL){
         fprintf(stderr, "Error allocating 2D int array.\n");
         return 1;
