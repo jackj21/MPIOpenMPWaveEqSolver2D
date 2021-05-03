@@ -27,6 +27,9 @@ wave_animation: $(OBJECTS)
 wave_error: $(OBJECTS)
 	mpicc -o wave_error wave_error.c -I$(INCLUDE_DIR) $(OBJECTS) $(C_FLAGS) $(INCLUDES)
 
+wave_print_test: $(OBJECTS)
+	mpicc -o wave_print_test wave_print_test.c array_2d_io.c -I$(INCLUDE_DIR) $(OBJECTS) $(C_FLAGS) $(INCLUDES)
+
 clean:
 	rm -f *.o
 	rm -f wave_timing
