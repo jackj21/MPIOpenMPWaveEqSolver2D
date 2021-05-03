@@ -58,9 +58,9 @@ int main(int argc, char** argv){
 	
 	// Evaluate initial conditions at t=-dt and t=0
 	evaluate_standing_wave(&u_prev, Mx, My, dx, dy, -1.0*dt);
-	//evaluate_standing_wave(&u_curr, Mx, My, dx, dy, 0.0);
+	evaluate_standing_wave(&u_curr, Mx, My, dx, dy, 0.0);
 
-	//char outfile[50] = "wave_print_test.bin";	
+	char outfile[50] = "wave_print_test.bin";	
 	
 	int ny_local = u_curr.ny_local;
 	int nx_local = u_curr.nx_local;
@@ -70,12 +70,12 @@ int main(int argc, char** argv){
 	int nx_global = u_curr.nx;
 	int padding_ny = u_curr.padding;
 	int padding_nx = u_curr.padding;
-	//float* arr = u_curr.data;
+	float* arr = u_curr.data;
 	MPI_Comm comm = u_curr.comm;
 
 
 	
-//	write_float_array_dist_cio(arr, ny_local, nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
+	write_float_array_dist_cio(arr, ny_local, nx_local, ny_padded, nx_padded, ny_global, nx_global, padding_ny, padding_nx, comm, outfile);
 	
 
 	// Clean up memory and close MPI

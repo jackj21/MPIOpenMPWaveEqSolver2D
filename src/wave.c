@@ -128,7 +128,7 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
 			j += padding;
             int kr = ji_to_idx(j, i, nx) + num_padded;
             float x = i*dx;
-			//halo_exchange_Array2D(u);
+			halo_exchange_Array2D(u);
             u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
 			
         }        
