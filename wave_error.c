@@ -10,7 +10,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
-
+#include <mpi.h>
 #include "array_2d.h"
 #include "wave.h"
 
@@ -20,6 +20,9 @@ int main(int argc, char** argv){
         printf("Incorrect number of parameters.  Correct usage:\n./wave_animation n Mx My alpha T\n");
         return 1;
     }
+	
+	MPI_Init(&argc, &argv);
+
 
     // Extract command line arguments.
     unsigned int n = atoi(argv[1]);
@@ -120,4 +123,6 @@ int main(int argc, char** argv){
     deallocate_Array2D_f(&u_curr);
     deallocate_Array2D_f(&u_next);
     deallocate_Array2D_f(&u_true);
+
+	MPI_Finalize();
 }

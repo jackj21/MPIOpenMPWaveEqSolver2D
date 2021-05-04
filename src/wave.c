@@ -69,7 +69,7 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
                          //private(e, k) \
                          //reduction(+:err_local)
     *err = 0;
-    for(k=0; k<(u1->ny_local); ++k) { 	// CHANGED N_LOCAL TO NY_LOCAL **CHECK IF CORRECT
+    for(k=0; k<(u1->nx_local); ++k) { 	// CHANGED N_LOCAL TO NY_LOCAL **CHECK IF CORRECT
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
     }
