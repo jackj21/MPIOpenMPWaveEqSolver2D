@@ -1,0 +1,85 @@
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
+rm -f *.o
+rm -f wave_timing
+rm -f wave_images
+rm -f wave_animation
+rm -f wave_error
+rm -f wave_print_test
+mpicc -o array_2d.o -Iinclude -c src/array_2d.c  -lm
+mpicc -o wave.o -Iinclude -c src/wave.c  -lm
+mpicc -o array_2d_io.o -Iinclude -c array_2d_io.c  -lm
+mpicc -o wave_timing wave_timing.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_images wave_images.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_animation wave_animation.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_error wave_error.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_print_test wave_print_test.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+Error allocating 2D int array.
+10001 250 0.000039
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+------------------------------------------------------------
+A process or daemon was unable to complete a TCP connection
+to another process:
+  Local host:    tc003
+  Remote host:   tc004
+This is usually caused by a firewall on the remote host. Please
+check that any firewall (e.g., iptables) has been disabled and
+try again.
+------------------------------------------------------------
+------------------------------------------------------------
+A process or daemon was unable to complete a TCP connection
+to another process:
+  Local host:    tc003
+  Remote host:   tc005
+This is usually caused by a firewall on the remote host. Please
+check that any firewall (e.g., iptables) has been disabled and
+try again.
+------------------------------------------------------------
+------------------------------------------------------------
+A process or daemon was unable to complete a TCP connection
+to another process:
+  Local host:    tc003
+  Remote host:   tc006
+This is usually caused by a firewall on the remote host. Please
+check that any firewall (e.g., iptables) has been disabled and
+try again.
+------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 1 with PID 0 on node tc003 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+------------------------------------------------------------
+A process or daemon was unable to complete a TCP connection
+to another process:
+  Local host:    tc003
+  Remote host:   tc004
+This is usually caused by a firewall on the remote host. Please
+check that any firewall (e.g., iptables) has been disabled and
+try again.
+------------------------------------------------------------
+------------------------------------------------------------
+A process or daemon was unable to complete a TCP connection
+to another process:
+  Local host:    tc003
+  Remote host:   tc005
+This is usually caused by a firewall on the remote host. Please
+check that any firewall (e.g., iptables) has been disabled and
+try again.
+------------------------------------------------------------
+------------------------------------------------------------
+A process or daemon was unable to complete a TCP connection
+to another process:
+  Local host:    tc003
+  Remote host:   tc006
+This is usually caused by a firewall on the remote host. Please
+check that any firewall (e.g., iptables) has been disabled and
+try again.
+------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 1 with PID 0 on node tc003 exited on signal 11 (Segmentation fault).
+--------------------------------------------------------------------------

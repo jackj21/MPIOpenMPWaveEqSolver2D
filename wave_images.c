@@ -121,7 +121,9 @@ int main(int argc, char** argv){
     deallocate_Array2D_f(&u_curr);
     deallocate_Array2D_f(&u_next);
     deallocate_Array2D_f(&u_true);
-	
+    double stop = MPI_Wtime();
+    double simulation_time = (double)(stop - t_start);
+    printf("%f\n", simulation_time);
 	MPI_Finalize();
 
     return 0;

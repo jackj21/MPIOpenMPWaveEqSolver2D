@@ -17,7 +17,7 @@ make clean
 make all
 
 echo "wave images p=64"
-echo " n Mx My 
+echo " n Mx My" 
 echo "wave error p=64"
 echo 
 
