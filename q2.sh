@@ -16,14 +16,20 @@ module load gompi
 make clean
 make all
 
-mpirun -np 1  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 2  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 4  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 8  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 16  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 32  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 64  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 128  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 256  ./wave_timing 10001 17 27 1.0 250
-mpirun -np 512  ./wave_timing 10001 17 27 1.0 250
+echo "strong wave_timing"
+echo "===================="
+echo "n nt time" > wave_time_strong.csv
 
+	mpirun -np 1  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 2  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 4  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 8  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 16  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 32  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 64  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 128  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 256  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 512  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+
+echo ""
+echo ""

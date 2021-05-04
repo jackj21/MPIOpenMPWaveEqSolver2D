@@ -17,9 +17,7 @@ make clean
 make all
 
 echo "wave images p=64"
-echo " n Mx My" 
-echo "wave error p=64"
-echo 
+mpirun -np 64 ./wave_images 301 17 27 1.0 500
 
-mpirun -np 64 ./wave_images 1001 17 27 1.0 500
-mpirun -np 64 ./wave_error 1001 17 27 1.0 500
+echo "wave error p=64"
+mpirun -np 64 ./wave_error 301 17 27 1.0 500
