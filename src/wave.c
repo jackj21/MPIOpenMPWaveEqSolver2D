@@ -69,7 +69,7 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
                          //private(e, k) \
                          //reduction(+:err_local)
     *err = 0;
-    for(k=0; k<(u1->nx_local); ++k) { 	// CHANGED N_LOCAL TO NY_LOCAL **CHECK IF CORRECT
+    for(k=0; k<(u1->ny_local); ++k) { 	// CHANGED N_LOCAL TO NY_LOCAL **CHECK IF CORRECT
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
     }
@@ -123,10 +123,9 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
     for(int j=0; j<ny_local; ++j) {
 		
         float y = (r0+j)*dy;
-		j += padding;
         for(int i=0; i<nx_local; ++i) {
 			
-            int kr = ji_to_idx(j, i, nx);
+            int kr = ji_to_idx(j+padding, i, nx);
             float x = i*dx;
 			
             u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
@@ -168,6 +167,11 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
                 u_prev->nx, u_prev->ny, u_curr->nx, u_curr->ny, u_next->nx, u_next->ny);
         return 2;
     }
+	
+	MPI_Comm comm = u_curr->comm;
+	int rank, size;
+	MPI_Comm_size(comm, &size);
+	MPI_Comm_rank(comm, &rank);
 
     // Convenience variables for shortening code
     unsigned int ny = u_curr->ny;
@@ -187,17 +191,34 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 
     // Loop over both spatial dimensions
     for(int j=0; j<ny_local; ++j) {
-        j += padding;
 		for(int i=0; i<nx_local; ++i) {
 			
             // Map the two dimensions back to the linear index
-            int kr = ji_to_idx(j, i, nx);
-
-            // If the point is on the boundary, zero it and move on to the next point
-            if ((j == 0) || (j == ny_local) || (i == 0) || (i == nx_local)) {
-                u_next_data[kr] = 0.0;
-                continue;
-            }
+            int kr = ji_to_idx(j+padding, i, nx);
+			
+			// Check boundary points for 1st and last ranks
+			// If the point is on the boundary, zero it and move on to the next point
+			// Checking 1st rank
+			if (rank == 0) {
+				if ((j==padding) || (i == 0) || (i == nx_local)) {
+					u_next_data[kr] = 0.0;
+					continue;
+				}
+			}
+			
+			// Checking last rank
+            if (rank == size-1) {
+				if ((j == ny_local) || (i == 0) || (i == nx_local)) {
+                	u_next_data[kr] = 0.0;
+                	continue;
+            	}
+			}
+			
+			// Checking all other ranks
+			if ((i == 0) || (i == nx_local)) {
+				u_next_data[kr] = 0.0;
+				continue;
+			}
 
             // Precompute the indices of the surrounding points
             int kr_up    = ji_to_idx(j-1, i, nx);
