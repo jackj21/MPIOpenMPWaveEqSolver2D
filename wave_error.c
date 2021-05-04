@@ -101,8 +101,15 @@ int main(int argc, char** argv){
     FILE* f;
     f = fopen(outfile, "wb");
     int n_written;
-
+	
     int to_write = nt+1;
+    n_written = fwrite(&to_write, sizeof(unsigned int), 1, f);
+    if (n_written != 1){
+        fprintf(stderr, "Error writing ny to file %s: %d of 1 data written.\n", outfile, n_written);
+        return 1;   
+    }
+	
+    to_write = 1;
     n_written = fwrite(&to_write, sizeof(unsigned int), 1, f);
     if (n_written != 1){
         fprintf(stderr, "Error writing ny to file %s: %d of 1 data written.\n", outfile, n_written);
