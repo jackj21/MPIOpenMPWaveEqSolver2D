@@ -58,13 +58,13 @@ int main(int argc, char** argv){
     nullify_Array2D_f(&u_true);
 
     // Allocate the required arrays.
-    allocate_Array2D_f(&u_prev, ny, nx);
+    allocate_Array2D_f(&u_prev, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
-    allocate_Array2D_f(&u_curr, ny, nx);
+    allocate_Array2D_f(&u_curr, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
-    allocate_Array2D_f(&u_next, ny, nx);
+    allocate_Array2D_f(&u_next, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
-    allocate_Array2D_f(&u_true, ny, nx);
+    allocate_Array2D_f(&u_true, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
 
     // Initialize the required arrays.

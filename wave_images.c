@@ -10,6 +10,7 @@
 #include <string.h>
 #include <time.h>
 #include <math.h>
+#include <mpi.h>
 
 #include "array_2d.h"
 #include "wave.h"
@@ -20,10 +21,14 @@ int main(int argc, char** argv){
         printf("Incorrect number of parameters.  Correct usage:\n./wave_images n Mx My alpha nt_plot0 nt_plot1 ...\n");
         return 1;
     }
+	
+	MPI_Init(&argc, &argv);
 
     // Setup the timers.
-    clock_t start, stop;
-    double simulation_time = 0.0;
+    double t_start, t_end;
+    double t_total = 0.0;
+
+
 
     // Extract command line arguments.
     unsigned int n = atoi(argv[1]);
@@ -32,9 +37,10 @@ int main(int argc, char** argv){
 
     float alpha = atof(argv[4]);
 
+	MPI_Barrier(MPI_COMM_WORLD);
 
     // Perform the task.
-    start = clock();
+    t_start = MPI_Wtime(); 
 
     // Specification allows us to assume that nx == ny
     unsigned int nx = n;
@@ -62,13 +68,13 @@ int main(int argc, char** argv){
     nullify_Array2D_f(&u_true);
 
     // Allocate the required arrays.
-    allocate_Array2D_f(&u_prev, ny, nx);
+    allocate_Array2D_f(&u_prev, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
-    allocate_Array2D_f(&u_curr, ny, nx);
+    allocate_Array2D_f(&u_curr, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
-    allocate_Array2D_f(&u_next, ny, nx);
+    allocate_Array2D_f(&u_next, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
-    allocate_Array2D_f(&u_true, ny, nx);
+    allocate_Array2D_f(&u_true, ny, nx, 1, MPI_COMM_WORLD);
     if (error) return 1;
 
     // Initialize the required arrays.
@@ -115,6 +121,8 @@ int main(int argc, char** argv){
     deallocate_Array2D_f(&u_curr);
     deallocate_Array2D_f(&u_next);
     deallocate_Array2D_f(&u_true);
+	
+	MPI_Finalize();
 
     return 0;
 }

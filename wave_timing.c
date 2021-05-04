@@ -37,7 +37,7 @@ int main(int argc, char** argv){
     // Perform the task.
 //    start = omp_get_wtime();
     start = MPI_Wtime();
-    standing_wave_simulation(nt, n, Mx, My, alpha);
+    standing_wave_simulation(nt, n, Mx, My, 1, alpha);
 
 //    stop = omp_get_wtime();
     stop = MPI_Wtime();
