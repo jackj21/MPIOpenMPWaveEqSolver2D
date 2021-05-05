@@ -23,15 +23,15 @@ echo "p n nt time" > wave_time_strong.csv
 for i in {1..3}
 do
 	mpirun -np 1  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 2  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 4  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 8  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 16  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 32  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 64  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 128  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 256  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
-	mpirun -np 512  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 2  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 4  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 8  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 16  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 32  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 64  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 128  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 256  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
+	mpirun -np 512  ./wave_timing 10001 17 27 1.0 25 >> wave_time_strong.csv
 done
 
 echo ""
