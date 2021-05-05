@@ -130,9 +130,10 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
             float x = i*dx;
 			
             u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
-			//halo_exchange_Array2D(u);
         }        
     }
+
+	halo_exchange_Array2D(u);
 
     return 0;
 }
@@ -188,7 +189,6 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 	int r0 = u_curr->r0;				// Starting idx of unpadded local vector in global coordinates
 	int ny_local = u_curr->ny_local;	// Size of array in y dimension
 	int nx_local = u_curr->nx_local;	// Size of array in x dimension
-	int num_padded = nx_local * padding;// Size of 1 padding region	
 
     // Loop over both spatial dimensions
     for(int j=0; j<ny_local; ++j) {

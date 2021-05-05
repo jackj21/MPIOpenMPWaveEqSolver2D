@@ -55,7 +55,7 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	arr->nx_padded = n + 0*padding;
 	
 	//need to change this as the calculation is incorrect
-	arr->r0 = global / size * rank;  // Set starting index in global coordinates for arr
+	arr->r0 = N_local * rank;  // Set starting index in global coordinates for arr
 		
 	// Assign the communicator (might need to change if using I/O)
 	arr->comm = comm;
@@ -281,7 +281,7 @@ int halo_exchange_Array2D(Array2D_f* arr){
 
 	//pointer to loc to send data from next rank
 	//changed calculation for this
-	float* send_to_down = arr->data + (arr->ny_local + arr->nx_padded);
+	float* send_to_down = arr->data + (arr->ny_local*arr->nx_padded);
 
 	//pointer to loc to fill using data from next rank
 	float* recv_from_down = send_to_down + p;
