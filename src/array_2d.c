@@ -44,7 +44,7 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	
 	// Compute subarray size for local arrays
 	int N_local, r0;
-	N_local = subarray_size(global, size, rank);
+	N_local = subarray_size(m, size, rank);
 
 	// Assign padding and size of local vector after calc
 	
@@ -53,7 +53,8 @@ int allocate_Array2D_f(Array2D_f* arr, unsigned int m, unsigned int n, int paddi
 	arr->nx_local = n;
 	arr->ny_padded = N_local + 2*padding;
 	arr->nx_padded = n + 0*padding;
-
+	
+	//need to change this as the calculation is incorrect
 	arr->r0 = global / size * rank;  // Set starting index in global coordinates for arr
 		
 	// Assign the communicator (might need to change if using I/O)
@@ -256,7 +257,8 @@ int write_Array2D_f(Array2D_f* u, char* filename){
  * 	error code, 0 for success, 1 for failure
  */
 int halo_exchange_Array2D(Array2D_f* arr){
-	int p = arr->padding;
+	//Changed from padding to nx_padded
+	int p = arr->nx_padded;
 	int h = arr->ny_padded;
 
 	int rank, size;
@@ -278,7 +280,8 @@ int halo_exchange_Array2D(Array2D_f* arr){
 	float* send_to_up = arr->data + p;
 
 	//pointer to loc to send data from next rank
-	float* send_to_down = arr->data + h - 2*p;
+	//changed calculation for this
+	float* send_to_down = arr->data + (arr->ny_local + arr->nx_padded);
 
 	//pointer to loc to fill using data from next rank
 	float* recv_from_down = send_to_down + p;

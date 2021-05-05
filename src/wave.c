@@ -222,10 +222,11 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 			}
 
             // Precompute the indices of the surrounding points
-            int kr_up    = ji_to_idx(j-1, i, nx);
-            int kr_down  = ji_to_idx(j+1, i, nx);
-            int kr_left  = ji_to_idx(j, i-1, nx);
-            int kr_right = ji_to_idx(j, i+1, nx);
+			// added padding to the j's
+            int kr_up    = ji_to_idx(j+padding-1, i, nx);
+            int kr_down  = ji_to_idx(j+padding+1, i, nx);
+            int kr_left  = ji_to_idx(j+padding, i-1, nx);
+            int kr_right = ji_to_idx(j+padding, i+1, nx);
 
             // Compute the Laplacian
             float lap = -4*u_curr_data[kr] + u_curr_data[kr_up] + u_curr_data[kr_down] + u_curr_data[kr_left] + u_curr_data[kr_right];
@@ -233,9 +234,10 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 
             // Compute the time step update for this point
             u_next_data[kr] = -1*u_prev_data[kr] + 2*u_curr_data[kr] + dt*dt*lap;
-			//halo_exchange_Array2D(u_next);
         }        
     }
+	//moved halo outside of the for-loop
+	halo_exchange_Array2D(u_next);
 
     return 0;
 }
