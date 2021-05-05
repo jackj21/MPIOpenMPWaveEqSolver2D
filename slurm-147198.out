@@ -1,0 +1,19 @@
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
+rm -f *.o
+rm -f wave_timing
+rm -f wave_images
+rm -f wave_animation
+rm -f wave_error
+rm -f wave_print_test
+mpicc -o array_2d.o -Iinclude -c src/array_2d.c  -lm
+mpicc -o wave.o -Iinclude -c src/wave.c  -lm
+mpicc -o array_2d_io.o -Iinclude -c src/array_2d_io.c  -lm
+mpicc -o wave_timing wave_timing.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_images wave_images.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_animation wave_animation.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_error wave_error.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_print_test wave_print_test.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+strong wave_timing
+====================
+
+

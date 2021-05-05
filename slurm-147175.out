@@ -1,0 +1,70 @@
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
+rm -f *.o
+rm -f wave_timing
+rm -f wave_images
+rm -f wave_animation
+rm -f wave_error
+rm -f wave_print_test
+mpicc -o array_2d.o -Iinclude -c src/array_2d.c  -lm
+mpicc -o wave.o -Iinclude -c src/wave.c  -lm
+mpicc -o array_2d_io.o -Iinclude -c array_2d_io.c  -lm
+mpicc -o wave_timing wave_timing.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_images wave_images.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_animation wave_animation.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_error wave_error.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+mpicc -o wave_print_test wave_print_test.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm
+weak wave_timing
+==================
+[tc018:176822] *** Process received signal ***
+[tc018:176822] Signal: Segmentation fault (11)
+[tc018:176822] Signal code:  (128)
+[tc018:176822] Failing at address: (nil)
+[warn] epoll_wait: Bad address
+[warn] poll: Bad address
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+[tc018:176822] [ 0] /lib64/libpthread.so.0(+0xf5f0)[0x2aaaab7c55f0]
+[tc018:176822] [ 1] /lib64/libc.so.6(__poll+0x2d)[0x2aaaabac5bed]
+[tc018:176822] [ 2] /apps/easybuild/software/tinkercliffs-rome/libevent/2.1.12-GCCcore-10.2.0/lib/libevent_core-2.1.so.7(+0x262cd)[0x2aaaab4a22cd]
+[tc018:176822] [ 3] /apps/easybuild/software/tinkercliffs-rome/libevent/2.1.12-GCCcore-10.2.0/lib/libevent_core-2.1.so.7(event_base_loop+0x2b8)[0x2aaaab4994a8]
+[tc018:176822] [ 4] /apps/easybuild/software/tinkercliffs-rome/OpenMPI/4.0.5-GCC-10.2.0/lib/libopen-pal.so.40(+0x33e8e)[0x2aaaaabc0e8e]
+[tc018:176822] [ 5] /lib64/libpthread.so.0(+0x7e65)[0x2aaaab7bde65]
+[tc018:176822] [ 6] /lib64/libc.so.6(clone+0x6d)[0x2aaaabad088d]
+[tc018:176822] *** End of error message ***
+/cm/local/apps/slurm/var/spool/job147175/slurm_script: line 23: 176822 Segmentation fault      mpirun -np 256 ./wave_timing 256256 17 27 1.0 250 >> wave_time_weak.csv
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 37 with PID 0 on node tc018 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 101 with PID 0 on node tc018 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 366 with PID 14119 on node tc020 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 29 with PID 0 on node tc018 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Primary job  terminated normally, but 1 process returned
+a non-zero exit code. Per user-direction, the job has been aborted.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+mpirun noticed that process rank 217 with PID 55822 on node tc019 exited on signal 9 (Killed).
+--------------------------------------------------------------------------
+
+
+slurmstepd: error: Detected 22461 oom-kill event(s) in step 147175.batch cgroup. Some of your processes may have been killed by the cgroup out-of-memory handler.
