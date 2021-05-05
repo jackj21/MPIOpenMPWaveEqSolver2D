@@ -18,7 +18,7 @@ wave.o: array_2d.o
 	mpicc -o wave.o -I$(INCLUDE_DIR) -c $(SRC_DIR)/wave.c $(C_FLAGS) $(INCLUDES)
 
 array_2d_io.o: 
-	mpicc -o array_2d_io.o -I$(INCLUDE_DIR) -c array_2d_io.c $(C_FLAGS) $(INCLUDES)
+	mpicc -o array_2d_io.o -I$(INCLUDE_DIR) -c $(SRC_DIR)/array_2d_io.c $(C_FLAGS) $(INCLUDES)
 
 wave_timing: $(OBJECTS)
 	mpicc -o wave_timing wave_timing.c -I$(INCLUDE_DIR) $(OBJECTS) $(C_FLAGS) $(INCLUDES)
