@@ -130,7 +130,7 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
             float x = i*dx;
 			
             u_data[kr] = sin(Mx*x*M_PI)*sin(My*y*M_PI)*cos(w*t);
-			halo_exchange_Array2D(u);
+			//halo_exchange_Array2D(u);
         }        
     }
 
@@ -201,7 +201,7 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 			// If the point is on the boundary, zero it and move on to the next point
 			// Checking 1st rank
 			if (rank == 0) {
-				if ((j==padding) || (i == 0) || (i == nx_local)) {
+				if ((j == padding) || (i == 0) || (i == nx_local)) {
 					u_next_data[kr] = 0.0;
 					continue;
 				}
@@ -233,7 +233,7 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 
             // Compute the time step update for this point
             u_next_data[kr] = -1*u_prev_data[kr] + 2*u_curr_data[kr] + dt*dt*lap;
-			halo_exchange_Array2D(u_next);
+			//halo_exchange_Array2D(u_next);
         }        
     }
 

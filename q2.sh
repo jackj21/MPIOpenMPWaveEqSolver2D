@@ -18,7 +18,7 @@ make all
 
 echo "strong wave_timing"
 echo "===================="
-echo "n nt time" > wave_time_strong.csv
+echo "p n nt time" > wave_time_strong.csv
 
 	mpirun -np 1  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv
 	mpirun -np 2  ./wave_timing 1001 17 27 1.0 25 >> wave_time_strong.csv

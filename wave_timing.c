@@ -22,6 +22,10 @@ int main(int argc, char** argv){
         return 1;
     }
     MPI_Init(&argc, &argv);
+
+	int size;
+	MPI_Comm_size(MPI_COMM_WORLD, &size);
+
     // Setup the timers.
     double start, stop;
     double simulation_time = 0.0;
@@ -43,7 +47,7 @@ int main(int argc, char** argv){
     stop = MPI_Wtime();
     simulation_time = (double)(stop - start);
 
-    printf("%d %d %f\n", n, nt, simulation_time);
+    printf("%d %d %d %f\n", size, n, nt, simulation_time);
     MPI_Finalize();
     return 0;
 }
