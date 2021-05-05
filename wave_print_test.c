@@ -19,7 +19,7 @@
 int main(int argc, char** argv){
 
     if(argc != 6){
-        printf("Incorrect number of parameters.  Correct usage:\n./wave_print_test n Mx My alpha dt\n");
+        printf("Incorrect number of parameters.  Correct usage:\n./wave_print_test n Mx My alpha nt\n");
         return 1;
     }
     MPI_Init(&argc, &argv);

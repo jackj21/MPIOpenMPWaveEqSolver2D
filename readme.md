@@ -1,10 +1,9 @@
-Project 02 (Solution by Russell J. Hewett)
-==========================================
+Project 04 By: Jack Jiang, Mason Barden, Shaan Chudasama (Group 5)
+==================================================================
 
 
-Here is a solution to Project 03.  It does not complete all of the experiments
-(i.e., scripts are not provided) but it is a complete implementation of the
-required coding steps.
+Here is our solution to Project 4. It is divided into multiple directories
+as described in the layout.
 
 
 Layout
@@ -13,6 +12,7 @@ Layout
 * The makefile and main programs are in the root directory.
 * The `include` directory contains all user-written header files.
 * The `src` directory contains all user-written source files.
+* The `print` directory contains a Jupyter notebook and output files to read printed data.
 
 
 Building
@@ -20,18 +20,33 @@ Building
 
 To compile all programs, run
 
-    make
+    make all
+
+To compile all objects, run 
+
+	make obj
 
 To build a specific program, run (for example)
 
    make wave_timing
 
+
 Executing
 ---------
 
-Each program takes 6 or 7 command line arguments to specify the parameters of
-the wave simulation.  These are documented with the programs.
+Each program takes 5 command line arguments to specify the parameters of
+the wave simulation. These are documented within the programs.
 
 If you run the `wave_images` program for the required timesteps, you can run the
 `plot_images.py` script to view the required plots.
 
+To run a specific program, run (for example)
+
+	mpirun -np <# processors> ./wave_timing N Mx My alpha nt
+
+There are also shell script files that may be run located in the root directory.
+These follow the analysis tasks accordingly by their name.
+
+To run a shell script, run (for example)
+
+	sbatch q1.sh
