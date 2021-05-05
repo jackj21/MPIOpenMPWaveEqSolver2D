@@ -509,7 +509,6 @@ p n nt time
 128 128128 250 989.743406
 128 128128 250 989.749971
 128 128128 250 989.772213
-2 total processes killed (some possibly by mpirun during cleanup)
 1 1001 250 4.845267
 2 2002 250 9.238579
 2 2002 250 9.238667
@@ -765,4 +764,3 @@ p n nt time
 128 128128 250 994.789667
 128 128128 250 994.790145
 128 128128 250 994.829101
-3 total processes killed (some possibly by mpirun during cleanup)

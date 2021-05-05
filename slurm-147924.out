@@ -1,0 +1,229 @@
+Resetting modules to system default. Reseting $MODULEPATH back to system default. All extra directories will be removed from $MODULEPATH.
+rm -f *.o
+rm -f wave_timing
+rm -f wave_images
+rm -f wave_animation
+rm -f wave_error
+rm -f wave_print_test
+mpicc -o array_2d.o -Iinclude -c src/array_2d.c  -lm -fopenmp
+mpicc -o wave.o -Iinclude -c src/wave.c  -lm -fopenmp
+mpicc -o array_2d_io.o -Iinclude -c src/array_2d_io.c  -lm -fopenmp
+mpicc -o wave_timing wave_timing.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm -fopenmp
+mpicc -o wave_images wave_images.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm -fopenmp
+mpicc -o wave_animation wave_animation.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm -fopenmp
+mpicc -o wave_error wave_error.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm -fopenmp
+mpicc -o wave_print_test wave_print_test.c -Iinclude array_2d.o wave.o array_2d_io.o  -lm -fopenmp
+all P wave_timing
+===================
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+--------------------------------------------------------------------------
+Your job has requested more processes than the ppr for
+this topology can support:
+
+  App: ./wave_timing
+  Number of procs:  512
+  PPR: 32:node
+
+Please revise the conflict and try again.
+--------------------------------------------------------------------------
+
+

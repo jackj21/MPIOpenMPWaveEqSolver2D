@@ -5,7 +5,7 @@ OBJECTS := array_2d.o wave.o array_2d_io.o
 
 C_FLAGS := 
 
-INCLUDES := -lm
+INCLUDES := -lm -fopenmp
 
 obj: array_2d.o wave.o array_2d_io.o
 
@@ -34,6 +34,8 @@ wave_error: $(OBJECTS)
 
 wave_print_test: $(OBJECTS)
 	mpicc -o wave_print_test wave_print_test.c -I$(INCLUDE_DIR) $(OBJECTS) $(C_FLAGS) $(INCLUDES)
+
+
 
 clean:
 	rm -f *.o

@@ -9,7 +9,7 @@
 #include <stdio.h>
 #include <math.h>
 #include <mpi.h>
-
+#include <omp.h>
 #include "wave.h"
 #include "array_2d.h"
 
@@ -65,11 +65,11 @@ int error_norm(Array2D_f* u1, Array2D_f* u2, float* err){
     float* u2_data = u2->data;
     int k;
     float e;
-//#pragma omp parallel for default(none) \
-                         //shared(n_data, u1_data, u2_data) \
-                         //private(e, k) \
-                         //reduction(+:err_local)
-    *err = 0;
+	*err = 0;
+#pragma omp parallel for default(none) \
+                         shared(u1, u1_data, u2_data,err) \
+                         private(e, k) \
+                         reduction(+:err_local)
     for(k=0; k<(u1->ny_local); ++k) { 	// CHANGED N_LOCAL TO NY_LOCAL **CHECK IF CORRECT
             e = u1_data[k] - u2_data[k];
             err_local += e*e;
@@ -121,6 +121,8 @@ int evaluate_standing_wave(Array2D_f* u, unsigned int Mx, unsigned int My, float
 	int nx_local = u->nx_local;
 	int num_padded = nx_local + padding;
 
+#pragma omp parallel for default(none) \
+						shared(ny_local, nx_local, r0, dy, dx, Mx, My, w, t, padding, nx, u_data)
     for(int j=0; j<ny_local; ++j) {
 		
         float y = (r0+j)*dy;
@@ -191,6 +193,9 @@ int wave_timestep(Array2D_f* u_prev, Array2D_f* u_curr, Array2D_f* u_next, float
 	int nx_local = u_curr->nx_local;	// Size of array in x dimension
 
     // Loop over both spatial dimensions
+#pragma omp parallel for default(none) \
+						shared(ny_local, nx_local, padding, nx, rank, u_prev_data, \
+						u_curr_data, u_next_data, dx, dt, size)
     for(int j=0; j<ny_local; ++j) {
 		for(int i=0; i<nx_local; ++i) {
 			
