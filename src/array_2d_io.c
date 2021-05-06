@@ -225,13 +225,19 @@ int write_float_array_dist_mpiio(float* arr,
 
     // Perform the actual write using MPI I/O
     // <student>
-	//MPI_File_open(comm, filename, MPI_MODE_APPEND, MPI_INFO_NULL, &out_file);
+	MPI_File_open(comm, filename, MPI_MODE_APPEND, MPI_INFO_NULL, &out_file);
 	
-	//offset = header_size + rank*write_data*sizeof(float);
+	offset = header_size + arr->r0*sizeof(float);
 	
-	//MPI_FILE_write_at_all(out_file, offset, write_data, n_data, MPI_FLOAT);
+	MPI_FILE_write_at_all(out_file, offset, write_data, n_data, MPI_FLOAT, &status);
 	
-	//MPI_File_close(&out_file);	
+	MPI_Get_count(&status, MPI_FLOAT, &n_written);
+	if (n_written != n_data) {
+		fprintf(stderr, "Error writing file %s data for rank$d. Got %d expected %d.\n", filename, rank, n_written, n_data);
+		return 1;
+	}
+
+	MPI_File_close(&out_file);	
     // </student>
 
     free(write_data);
